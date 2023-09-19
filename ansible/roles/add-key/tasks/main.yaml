@@ -1,0 +1,8 @@
+---
+- name: Set authorized key taken from file
+  # require ansible-galaxy collection install ansible.posix 
+  # https://docs.ansible.com/ansible/latest/collections/ansible/posix/authorized_key_module.html
+  ansible.posix.authorized_key:
+    user: "{{ username_to_add }}"
+    state: present
+    key: "{{ lookup('file', public_key | default('~/.ssh/id_rsa.pub', true)) }}"

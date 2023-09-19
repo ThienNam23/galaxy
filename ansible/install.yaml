@@ -1,0 +1,30 @@
+# ansible-playbook -i inventory/hosts.yaml install.yaml
+
+- name: Download ES on local
+  hosts: localhost
+  roles:
+    - download_es
+    - gen-cert
+
+- name: Add user, group and ssh key for elasticsearch
+  hosts: elasticsearch
+  become: true
+  remote_user: namtt
+  vars:
+    ansible_user: "namtt"
+    ansible_ssh_pass: "changeme"
+    ansible_become_pass: "changeme"
+    username_to_add: "{{ elasticsearch_user }}"
+    group_to_add: "{{ elasticsearch_group }}"
+  roles:
+    - add-user
+    - add-key
+
+- name: Install Elasticsearch
+  hosts: elasticsearch
+  become: false
+  remote_user: "{{ elasticsearch_user }}"
+  vars:
+    ansible_ssh_private_key_file: "{{ private_key | default('~/.ssh/id_rsa', true) }}"
+  roles:
+    - elasticsearch
