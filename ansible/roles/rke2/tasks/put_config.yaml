@@ -1,0 +1,14 @@
+---
+- name: Prepare RKE2 config for server node
+  block:
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: /etc/rancher/rke2
+        state: directory
+        mode: 0755
+    
+    - name: Render config
+      ansible.builtin.template:
+        src: config.yaml.j2
+        dest: /etc/rancher/rke2/config.yaml
+        mode: 0644

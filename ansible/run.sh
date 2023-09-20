@@ -1,5 +1,5 @@
 #!/bin/bash
 
-playbook=add_user_and_key.yaml
+playbook=install_rke2.yaml
 inventory=inventory/hosts.yaml
 ansible-playbook -i $inventory $playbook

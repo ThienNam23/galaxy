@@ -1,0 +1,15 @@
+---
+- name: Run script install RKE2
+  ansible.builtin.shell:
+    cmd: |
+      curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="{{ install_rke2_type }}" sh -
+
+- name: Install server nodes
+  ansible.builtin.include_tasks: 
+    file: server.yaml
+  when: inventory_hostname in groups['masters']
+
+- name: Install agent nodes
+  ansible.builtin.include_tasks: 
+    file: agent.yaml
+  when: inventory_hostname in groups['workers']

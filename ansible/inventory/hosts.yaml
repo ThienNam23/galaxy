@@ -1,8 +1,15 @@
 all:
   hosts:
-    master:
+    host_master:
       ansible_host: 192.168.57.100
-    worker1:
+    host_worker1:
       ansible_host: 192.168.57.101
-    worker2:
+    host_worker2:
       ansible_host: 192.168.57.102
+  children:
+    masters:
+      hosts:
+        host_master:
+    workers:
+      hosts:
+        host_worker1:
