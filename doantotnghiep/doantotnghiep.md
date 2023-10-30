@@ -222,13 +222,75 @@ https://about.gitlab.com/blog/2022/02/15/ten-reasons-why-your-business-needs-ci-
 
 ### Các công nghệ sử dụng
 
-- Vagrant, VirtualBox
-- Ansible
-- Docker, RKE2
-- Gitlab, GitlabCI
-- ArgoCD
+- Vagrant + VirtualBox: Tạo máy ảo
+- Ansible:
+  - Dựng k8s cluster
+  - Cài đặt Gitlab, Gitlab runner
 
-### 
+- RKE2: Môi trường k8s
+- ArgoCD: Công cụ chạy CD được cài đặt trên môi trường k8s
+
+Môi trường lab: Hệ điều hành Kubuntu 22.04 LTS
+
+### Tạo máy ảo với Vagrant và VirtualBox
+
+**Vagrant**
+
+Vagrant là gì?  
+
+Cài đặt Vagrant
+
+Thực hiện thêm chữ ký số và kho phân phối của HashiCorp danh sách của APT, cập nhật APT và cài đặt Vagrant
+
+```sh
+wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update && sudo apt install vagrant
+```
+
+Kiểm tra Vagrant đã được cài đặt hay chưa bằng lệnh 
+
+```sh
+vagrant version
+```
+
+**VirtualBox**
+
+VirtualBox là gì
+
+Cài đặt VirtualBox
+
+### Cài đặt RKE2 và Gitlab sử dụng Ansible
+
+Ansible là gì
+
+Cài đặt Ansible
+
+Điều kiện tiên quyết:
+- Đối với máy điều khiển (control node - máy chạy Ansible), bạn có thể sử dụng gần như mọi máy giống UNIX được cài đặt Python 3.9 hoặc mới hơn. Điều này bao gồm Red Hat, Debian, Ubuntu, macOS, BSD và Windows trong bản phân phối Hệ thống con Windows cho Linux (WSL). Windows không có WSL không được hỗ trợ nguyên bản như một nút điều khiển; xem bài đăng trên blog của Matt Davis để biết thêm thông tin
+
+- Đối với máy được quản lý (managed node, remote host). Nút được quản lý (máy mà Ansible đang quản lý) không yêu cầu cài đặt Ansible mà yêu cầu Python 2.7 hoặc Python 3.5 - 3.11 để chạy mã Python do Ansible tạo. Nút được quản lý cũng cần một tài khoản người dùng có thể kết nối thông qua SSH với nút có shell POSIX tương tác.
+
+Ansible được cài đặt thông qua trình quản lý gói của Python - PIP. Để kiểm tra PIP được cài đặt hay chưa ta chạy lệnh
+
+```sh
+python3 -m pip -V
+```
+
+Nếu chưa, cài đặt PIP theo cú pháp sau
+
+```sh
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python3 get-pip.py --user
+```
+
+Cài đặt Ansible
+
+```sh
+python3 -m pip install --user ansible
+```
+
+Để có thể chạy được lệnh của ansible ở mọi nơi, ta cần phải thay đổi biến PATH
 
 ## Chương 4: Kết luận
 
