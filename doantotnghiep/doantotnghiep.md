@@ -220,56 +220,79 @@ https://about.gitlab.com/blog/2022/02/15/ten-reasons-why-your-business-needs-ci-
 
 ## Chương 3: Triển khai hệ thống CI/CD
 
-### Các công nghệ sử dụng
+Trong chương này ta sẽ tìm hiểu chi tiết các thành phần của hệ thống CI/CD, các công cụ để xây dựng hệ thống CI/CD; cách cài đặt, cấu hình và vận hành chúng.
 
-- Vagrant + VirtualBox: Tạo máy ảo
-- Ansible:
-  - Dựng k8s cluster
-  - Cài đặt Gitlab, Gitlab runner
+Trong phạm vi đồ án này ta sử dụng những công cụ sau:
 
-- RKE2: Môi trường k8s
-- ArgoCD: Công cụ chạy CD được cài đặt trên môi trường k8s
+- Vagrant + VirtualBox: Dùng để tạo dựng và quản lý đồng thời nhiều máy ảo cùng lúc
+- Ansible: Công cụ tự động thao tác tới các máy ảo để cấu hình và cài đặt các ứng dụng cần thiết tùy từng máy riêng biệt theo một kịch bản được viết sẵn.
+- Gitlab: Kho lưu trữ mà nguồn và image của những ứng dụng dạng container
+- Gitlab Runner: Công cụ triển khai CI
+- RKE2: Công cụ dùng để dựng môi trường Kubernetes (K8s). Kubernetes sẽ kết nối các máy chủ thành một cụm máy chủ thống nhất giúp triển khai các ứng dụng dạng container trên môi trường K8s
+- ArgoCD: Công cụ triển khai CD
 
-Môi trường lab: Hệ điều hành Kubuntu 22.04 LTS
+Trong bài ta sẽ tương tác với các máy chủ ảo, để phân biệt ta gọi máy tính điều khiển là Control node và các máy ảo là Managed node, khái niệm này đến từ Ansible nên khi sử dụng các công cụ cũng thuận tiện hơn.
 
-### Tạo máy ảo với Vagrant và VirtualBox
+Control node có cấu hình như sau:
+
+- Hệ điều hành: Kubuntu 22.04 LTS
+- CPU: 4 core
+- RAM: 16GB
+- Python: 3.10.12 + pip
+- Visual Studio Code
+- Các công cụ cần cài đặt: Vagrant, VirtualBox, Ansible
+
+Manage node bao gồm 3 node (master, worker-1, worker-2):
+
+Sau đây chúng ta sẽ tìm hiểu chi tiết từng công cụ và cách cài đặt chúng trên từng máy.
 
 **Vagrant**
 
-Vagrant là gì?  
+Vagrant là gì?
 
-Cài đặt Vagrant
+Vagrant là công cụ của HashiCorp được thiết kế cho mọi người như một cách đơn giản và nhanh nhất để tạo môi trường ảo hóa, quản lý vòng đời máy ảo với giao diện dòng lệnh. Vagrant tương tác với các nền tảng ảo hóa như VirtualBox, HyperV, VMware ..., nó giúp tạo và quản lý các máy ảo trên các nền tảng đó. Vagrant cung cấp một cấu hình đơn giản tạo và quản lý, tương tác với máy ảo mà không có nhiều sự khác biệt bất kể ngưởi dùng đang sử dụng nền tảng ảo hóa nào trên bất kỳ hệ điều hành nào Windows, Linux hay MacOS.
 
-Thực hiện thêm chữ ký số và kho phân phối của HashiCorp danh sách của APT, cập nhật APT và cài đặt Vagrant
+Tạo dựng và quản lý từng máy ảo một cách thủ công sẽ rất phức tạp và yêu cầu rất nhiều công sức. Thay vào đó với Vagrant, chúng ta chỉ cần 1 file cấu hình duy nhất Vagrantfile có thể dựng hàng loạt máy ảo và quản lý chúng.
 
-```sh
+Để cài đặt Vagrant, ta thực hiện thêm chữ ký số và repository (kho lữu trữ) của HashiCorp source list (danh sách nguồn) của APT, cập nhật APT và cài đặt Vagrant bằng cách chạy các lệnh sau
+
+```shell
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-sudo apt update && sudo apt install vagrant
-```
-
-Kiểm tra Vagrant đã được cài đặt hay chưa bằng lệnh 
-
-```sh
-vagrant version
+sudo apt update
+sudo apt install vagrant -y
 ```
 
 **VirtualBox**
 
-VirtualBox là gì
+VirtualBox (hay Oracle VM VirtualBox) là phần mềm ảo hóa, đa nền tảng, mã nguồn mở phổ biến nhất thế giới, cho phép các nhà phát triển phân phối mã nhanh hơn bằng cách chạy nhiều hệ điều hành trên một thiết bị. Các nhóm CNTT và nhà cung cấp giải pháp sử dụng VirtualBox để giảm chi phí vận hành và rút ngắn thời gian cần thiết để triển khai các ứng dụng tại chỗ và trên đám mây một cách an toàn.
 
-Cài đặt VirtualBox
+Cài đặt VirtualBox, ta thực hiện các lệnh sau
+
+```sh
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] http://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" >> /etc/apt/sources.list
+wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --dearmor --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg
+sudo apt-get update
+sudo apt-get install virtualbox-6.1 -y
+```
 
 ### Cài đặt RKE2 và Gitlab sử dụng Ansible
 
-Ansible là gì
+Thông thường khi làm việc trong môi trường có nhiều server, hàng chục hay hàng trăm thậm chí vài nghìn server, người quản trị viên phải có nhiều việc phải lo như setup crontab, cập nhật phần mềm, các gói phụ thuộc, triển khai ứng dụng, chỉnh sửa cấu hình, v.v... Mặc dù việc này không quá khó khăn nhưng nó tổn hại rất lớn tới thời gian và công sức vận hành. Lặp đi lặp lại từng ấy công việc trên nhiều máy chủ đôi khi cũng dẫn tới sơ xuất, nhầm lẫn và dẫn tới những hậu quả không đáng có. Ansible là giải pháp tự động giúp khắc phục vấn đề này.
 
-Cài đặt Ansible
+Ansible là một công cụ tự động hóa mã nguồn mở được tài trợ bởi Red Hat. Ansible là giải pháp đơn giản nhất để tự động hóa các IT tasks (tác vụ CNTT).
+Nó hỗ trợ cơ sở hạ tầng dưới dạng mã, bao gồm chức năng cung cấp phần mềm, quản lý cấu hình và triển khai ứng dụng thông qua kịch bản (playbook) được viết sẵn. Nó có thể tương tác với nhiều server cùng lúc bất kể các tác vụ trên từng server giống nhau hay khác nhau, giúp giảm thiếu gánh năng về việc quản lý cho các quản trị viên.
 
-Điều kiện tiên quyết:
-- Đối với máy điều khiển (control node - máy chạy Ansible), bạn có thể sử dụng gần như mọi máy giống UNIX được cài đặt Python 3.9 hoặc mới hơn. Điều này bao gồm Red Hat, Debian, Ubuntu, macOS, BSD và Windows trong bản phân phối Hệ thống con Windows cho Linux (WSL). Windows không có WSL không được hỗ trợ nguyên bản như một nút điều khiển; xem bài đăng trên blog của Matt Davis để biết thêm thông tin
+Khi làm việc với Ansible, có 2 khái niệm cần lưu ý là:
 
-- Đối với máy được quản lý (managed node, remote host). Nút được quản lý (máy mà Ansible đang quản lý) không yêu cầu cài đặt Ansible mà yêu cầu Python 2.7 hoặc Python 3.5 - 3.11 để chạy mã Python do Ansible tạo. Nút được quản lý cũng cần một tài khoản người dùng có thể kết nối thông qua SSH với nút có shell POSIX tương tác.
+- Control node: Đây là máy tính chạy Ansible, điều khiển các server từ xa
+- Managed node (hay còn gọi là remote host): Đây là các server từ xa được Ansible tương tác đến để chạy các IT tasks
+
+Trước khi cài đặt Ansible cần lưu ý một số Điều kiện tiên quyết:
+
+- Đối với Control node, ta có thể sử dụng Ansible trên mọi máy tính giống UNIX được cài đặt Python 3.9 hoặc mới hơn. Có nghĩa là những máy tính có hệ điều hành Red Hat, Debian, Ubuntu, macOS, BSD là được chấp nhận. Riêng đối với Windows yêu cầu phải sử dụng Ansible trong bản phân phối Hệ thống con Windows cho Linux (WSL). Windows không có WSL không được hỗ trợ như một Control node. Tìm hiểu [tại đây](blog.rolpdog.com/2020/03/why-no-ansible-controller-for-windows.html).
+
+- Đối với Managed node không yêu cầu cài đặt Ansible mà yêu cầu Python 2.7 hoặc Python 3.5 - 3.11 để chạy code Python do Ansible tạo. Managed node cũng cần một tài khoản người dùng có thể kết nối thông qua SSH với nút có shell POSIX để tương tác (tức là Control node).
 
 Ansible được cài đặt thông qua trình quản lý gói của Python - PIP. Để kiểm tra PIP được cài đặt hay chưa ta chạy lệnh
 
@@ -281,16 +304,104 @@ Nếu chưa, cài đặt PIP theo cú pháp sau
 
 ```sh
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python3 get-pip.py --user
+python3 get-pip.py
 ```
 
-Cài đặt Ansible
+Cài đặt Ansible thông qua PIP ta chạy lệnh sau
 
 ```sh
 python3 -m pip install --user ansible
 ```
 
-Để có thể chạy được lệnh của ansible ở mọi nơi, ta cần phải thay đổi biến PATH
+Để có thể chạy được lệnh của Ansible ở mọi nơi, ta cần phải thay đổi biến môi trường PATH bằng cách thêm lệnh sau vào cuối file `~/.bashrc`
+
+```sh
+export PATH="~/.local/bin:$PATH"
+```
+
+Như vậy việc chuẩn bị các công cụ trên Control node đã xong.
+
+Tiếp theo đây chúng ta sẽ tiến hành dựng 3 máy ảo Manage node (master, worker-1, worker-2) và cài các ứng dụng lên chúng
+
+Clone git repository và di chuyển vào thư mục bằng lệnh:
+
+```sh
+git clone https://github.com/cyanwind23/galaxy.git
+cd galaxy
+```
+
+**Tạo dựng máy ảo**
+
+```sh
+cd vagrant/galaxy_cluster
+vagrant up
+```
+
+Đợi một lúc trong giao diện GUI của VirtualBox sẽ xuất hiện 3 máy ảo ở trạng thái running (#Ảnh)
+
+Sau đó di chuyển tới thư mục ansible tiến hành cấu hình và cài đặt các ứng dụng cần thiết, dựng cụm K8s trên 3 máy ảo vừa tạo
+
+```sh
+cd ../../ansible
+ansible-playbook -i inventory/hosts.yaml install.yaml
+```
+
+Ansible playbook thực hiện những tác vụ sau:
+
+Trên Control node:
+
+- Tạo SSH key
+- Thêm thông tin đăng nhập SSH tới từng Managed node vào file `~/.ssh/config`
+- Sửa đổi file host để dễ dàng truy cập vào các ứng dụng trên Manage node sau khi cài đặt xong
+- Cài đặt `kubectl` và `Helm` để tương tác tới K8s cluster
+- (Sau khi cụm K8s được cài xong và Ready) Cài đặt ArgoCD bằng Helm
+- Lấy password 
+
+Trên Managed node:
+
+- Master:
+  - Cài dặt RKE2 với server mode để chỉ định đây là master node trong K8s cluster
+  - Lấy file kubeconfig về để điều khiển K8s cluster thông qua `kubectl`
+  - Lấy server token về để thực hiện join các worker node vào cụm K8s
+- Worker-1:
+  - Cài dặt RKE2 với agent mode và server token để chỉ định đây là worker node trong K8s cluster
+- Worker-2:
+  - Cài dặt RKE2 với agent mode và server token để chỉ định đây là worker node trong K8s cluster
+  - Cài đặt Gitlab, Gitlab Runner
+
+Ta có các đường dẫn sau để truy cập vào các ứng dụng:
+
+- `http://argocd.thiennam23.dev`: Truy cập vào giao diện ArgoCD
+- `http://gitlab.thiennam23.dev`: Truy cập vào giao diện GitLab
+- `http://longhorn.thiennam23.dev`: Truy cập vào giao diện Longhorn
+- `http://vault.thiennam23.dev`: Truy cập vào giao diện Vault
+- `http://myapp-dev.thiennam23.dev`: Truy cập vào giao diện App của môi trường develop
+- `http://myapp.thiennam23.dev`: Truy cập vào giao diện App trên môi trường production
+
+### Kịch bản
+
+Kịch bản demo như sau:
+
+Một nhà phát triển đã code xong chức năng mới và muốn tích hợp vào ứng dụng hiện tại. Trước tiên anh ta commit lên branch `dev` của repository. Hệ thông CI/CD sẽ thực hiện chạy CI pipline bao gồm các công đoạn sau:
+
+- Lint code: kiểm tra coding convension, v.v...
+- Chạy Unit test
+- Kiểm thử bảo mật: SonarqueScan, Detect secret
+- Build image
+- Trivy scan CVE
+- Push image vào registry
+
+với CD pipline, mọi tác vụ được tự động hóa bởi ArgoCD bao gồm:
+
+- Kiểm tra sự thay đổi trong registry và phát hiện có image mới
+- Cập nhật tag mới trong manifest của App trên git repository
+- Tự động Sync (đồng bộ hóa) manifest từ git lên K8s cho môi trường dev
+
+Như vậy khi truy cập vào `http://myapp-dev.thiennam23.dev` ta có thể thấy sự khác biệt
+
+Tiếp đó anh ấy truy cập vào App để kiểm tra tính năng mới được cập nhật rồi thực hiện tạo Merge Request để triển khai lên môi trường production. Quản lý hoặc Leader sau khi xem các báo cáo từ CI/CD pipeline và bộ phận kiểm thử quyết định Approve MR để triển khai lên môi trường production. Luồng CI/CD chạy như trước tuy nhiên cần một bước xác nhận trước khi đồng bộ manifest vào môi trường K8s. Bước này yêu cầu Quản lý hoặc trưởng nhóm vào kiểm tra sự thay đổi của Manifest và thực hiện đồng bộ hóa manifest. Như vậy quá trình CI/CD kết thúc.
+
+Như vậy trong trường hợp lý tưởng nhất, không xảy ra gián đoạn ở bất cứ khâu nào trong hệ thống CI/CD. Một tính năng mới đã được đưa tới người dùng chỉ sau vài phút các nhà phát triển commit code lên git repository. Tốc độ phát hành rất nhanh chóng kéo theo tần suất phát hành thường xuyên hơn giúp ứng dụng liên tục được nâng cấp, cải thiện chất lượng dịch vụ.
 
 ## Chương 4: Kết luận
 
