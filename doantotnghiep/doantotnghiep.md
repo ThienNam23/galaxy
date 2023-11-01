@@ -10,21 +10,37 @@
 
 #### Vì sao lại cần DevOps?
 
-Thông thường vòng đời của một sản phẩm gồm 2 giai đoạn chính: giai đoạn phát triển và giai đoạn vận hành. Giai đoạn phát triển bao gồm phần việc của Business Analyst, UI designer, Developer, QA/QC, v.v... Giai đoạn vận hành có sự tham gia của System Engineer, System Administrator, Operation Executive, Release engineer, DBA, Network Engineer, Security Engineer, v.v... Tuy nhiên hai giai đoạn này tương đối tách rời nhau đặc biệt ở những công ty có quy mô từ 
+Thông thường vòng đời của một sản phẩm phần mềm gồm 2 giai đoạn chính: giai đoạn phát triển và giai đoạn vận hành. Giai đoạn phát triển bao gồm phần việc của Business Analyst, UI designer, Developer, QA/QC, v.v... Giai đoạn vận hành có sự tham gia của System Engineer, System Administrator, Operation Executive, Release engineer, DBA, Network Engineer, Security Engineer, v.v... Ở mỗi giai đoạn đều có những đội nhóm và công việc tách biệt. Sự tách biệt này càng phân hóa rõ ràng ở những công ty có quy mô từ trung bình trở lên. Mục tiêu của nhóm phát triển là phát triển các tính năng mới liên quan đến những thay đổi đối với môi trường hiện có. Điều đó có nghĩa là những thay đổi mới được đưa vào một môi trường mà trên thực tế, một môi trường có tính ổn định có thể bị mất ổn định do những thay đổi được đưa ra – điều này mâu thuẫn trực tiếp với mục tiêu của các nhóm vận hành. Sự mâu thuẫn này hình thành nên khái niệm Wall of confusion - Bức tường của sự hiểu lầm. Nó sẽ là rào cản kìm hãm sự phát triển phần mềm khiến cho nỗ lực làm việc của nhân viên cũng như chất lượng phần mềm ngày càng giảm sút.
 
-Thực tế, trong một công ty/dự án phần mềm, các đội ngũ được chia thành nhiều nhóm phát triển và vận hành. Xuất phát từ nhu cầu trái ngược, thói quen trái ngược, hiểu biết và tư tưởng trái ngược, sự khác biệt về góc nhìn đã hình thành nên Wall of confusion - "Bức tường của sự hiểu lầm" giữa các đội nhóm Dev và Ops.
+Về mặt sản phẩm, với sự phát triển của công nghệ kéo theo sự bùng nổ về quy mô của các công ty cũng như sự đa dạng các sản phẩm công nghệ kéo theo quy mô của các hệ thống cũng mở rộng theo cấp số nhân. Từ một vài server, hệ thống có thể phát triển lên đến hàng chục, hàng trăm, hàng nghìn, hoặc thậm chí hàng triệu server (ví dụ như trường hợp của Google, Facebook). Đồng thời ngành phát triển phần mềm cũng dịch chuyển theo một hướng khác – microservices - một sản phẩm lớn được chia tách ra thành rất nhiều các service (dịch vụ) nhỏ, các service này liên kết với nhau tạo thành một sản phẩm hoàn chỉnh. Trước nhu cầu phát triển và cải tiến sản phẩm liên tục, những thách thức mới, những bài toán mới được đặt ra:
+
+- Về mặt quy trình, hay là khía cạnh con người làm thế nào để các bộ phận hợp tác thuận lợi hơn? Làm thế nào để quy trình làm việc được trơn tru, suôn sẻ hơn?
+- Về mặt sản phẩm, làm thế nào để các service kết nối và giao tiếp với nhau theo rules (nguyên tắc) hiệu quả, cũng như đảm bảo việc scaling (mở rộng quy mô) được dễ dàng và êm ái hơn?
+
+Khái niệm DevOps ra đời nhằm giải quyết những vấn đề này. DevOps giúp tối ưu hóa chu trình phát triển phần mềm, giúp sản phẩm phần mềm được cập nhật, release (phát hành) nhanh và thường xuyên hơn.
 
 #### Khái niệm DevOps
 
 Theo định nghĩa mô hình DevOps của AWS (Amazon Web Services), "DevOps là sự kết hợp các triết lý văn hoá, thực tiễn và công cụ giúp nâng cao khả năng của tổ chức trong việc cung cấp các ứng dụng và dịch vụ với tốc độ cao, phát triển và cải tiến sản phẩm với tốc độ nhanh hơn các tổ chức sử dụng quy trình quản lý cơ sở hạ tầng và phát triển phần mềm truyền thống. Tốc độ này cho phép các tổ chức phục vụ khách hàng tốt hơn và cạnh tranh hiệu quả hơn trên thị trường". Đơn giản hơn, DevOps là viết tắt của Development (Dev) và Operations (Ops), là một quá trình đề cao sự hợp tác, kéo hai giai đoạn phát triển và vận hành xích lại gần nhau hơn.
 
-Có thể coi DevOps là sự kết hợp của Tư tưởng mới, Công cụ mới và Kỹ năng mới. Tư tưởng mới ở đây chính là DevOps Engineer cần cần đặt lợi ích doanh nghiệp, lợi ích sản phẩm lên hàng đầu, đồng thời thấy rằng toàn bộ các team thực chất là cùng một “phe”, cùng chia sẻ lợi ích cũng như rủi ro. Vậy thì, người làm DevOps Engineer là phải có tư tưởng – mindset đúng đầu tiên.  DevOps Engineer cần là người đứng giữa có mindset của cả 2 phía để tăng cường sự hợp tác, giải quyết mâu thuẫn, phối hợp giữa các đội nhóm lại với nhau giúp quy trình phát triển phần mềm trở nên ổn định, hiệu quả hơn.
+https://itviec.com/blog/devops-la-gi/
+Có thể coi DevOps là sự kết hợp của Tư tưởng mới, Công cụ mới và Kỹ năng mới.
 
-Công cụ mới là việc DevOps Engineer phải thường xuyên tìm hiểu các công cụ mới, lựa chọn, đánh giá sau đó áp dụng vào hệ thống cơ sở hạ tầng của công ty. Nhiệm vụ quan trọng của DevOps Engineer là tự động hóa hệ thống. Thậm chí DevOps Engineer tự phát triển các automation tool cho công ty.
+Tư tưởng mới ở đây chính là DevOps Engineer cần cần đặt lợi ích doanh nghiệp, lợi ích sản phẩm lên hàng đầu. Trong DevOps, các nhóm không hoạt động tách biệt – ít nhất là các nhóm phát triển và và các nhóm vận hành hỗ trợ sản phẩm. DevOps phải chỉ ra rằng cả nhóm phát triển và nhóm vận hành đều thuộc cùng một nhóm, họ không có những mục tiêu khác nhau. Toàn bộ nhóm có một bộ mục tiêu duy nhất áp dụng cho tất cả các vai trò trong nhóm, cùng chia sẻ lợi ích cũng như rủi ro. Vậy thì, người làm DevOps Engineer là phải có mindset (tư tưởng) đúng đầu tiên. DevOps Engineer phải là người đứng giữa, có mindset của cả 2 phía để tăng cường sự hợp tác, giải quyết mâu thuẫn, không chỉ phá vỡ bức tường mà còn làm cho toàn bộ quá trình phát triển và hỗ trợ trở nên dễ dàng và liền mạch.
 
-Kỹ năng mới, DevOps Engineer là một ví trí mới với vai trò mới, hiển nhiên là yêu cầu các kỹ năng mới. Công việc chính của DevOps Engineer rất gần với công việc của Sysadmin, bao gồm: deploy, optimizing, monitoring, analysis… Điểm khác biệt là DevOps Engineer đòi hỏi nhiều kĩ năng mềm hơn, đồng thời phải biết dùng coding, scripting để automate hệ thống. Người làm DevOps Engineer cũng cần tìm hiểu về stack mà sản phẩm công ty đang sử dụng, để có thể cùng review bug, viết những unit test thông thường, và để khi phát triển tiến trình CI/CD thì deploy “êm ái” hơn. Cho nên, nếu coi DevOps Engineer là Sysadmin “kiểu mới” thì cũng không sai.
+Công cụ mới là việc DevOps Engineer phải thường xuyên tìm hiểu các công cụ mới, lựa chọn, đánh giá sau đó áp dụng vào hệ thống cơ sở hạ tầng của công ty. Nhiệm vụ quan trọng của DevOps Engineer là tự động hóa hệ thống. Thậm chí DevOps Engineer tự phát triển các automation tool (công cụ tự động hóa) cho công ty.
 
-**Lịch sử hình thành DevOps**
+Kỹ năng mới, DevOps Engineer là một ví trí mới với vai trò mới, hiển nhiên là yêu cầu các kỹ năng mới. Công việc chính của DevOps Engineer rất gần với công việc của Sysadmin, bao gồm: deploy (triển khai), optimizing (tối ưu hóa), monitoring (giám sát), analysis (phân tích), v.v... Điểm khác biệt là DevOps Engineer đòi hỏi nhiều kĩ năng mềm hơn, đồng thời phải biết dùng coding (kỹ năng lập trình), scripting (kỹ năng viết kịch bản) để automate (tự động hóa) hệ thống. Người làm DevOps Engineer cũng cần tìm hiểu về stack (tập công nghệ) mà sản phẩm công ty đang sử dụng, để có thể cùng review bug (đánh giá lỗi), viết những unit test thông thường, và để khi phát triển tiến trình CI/CD thì deploy mượt mà hơn. Cho nên, nếu coi DevOps Engineer là Sysadmin “kiểu mới” thì cũng không sai.
+
+https://itguru.vn/blog/devsecops-la-gi-va-khac-the-nao-voi-devops/
+Quy trình DevOps bao gồm các phương pháp:
+
+- Tích hợp liên tục (CI): hợp nhất các thay đổi code để đảm bảo phiên bản mới nhất có sẵn cho các nhà phát triển
+- Phân phối liên tục và triển khai liên tục (CD): tự động hóa quá trình phát hành các bản cập nhật để tăng hiệu quả
+- Microservices: xây dựng một ứng dụng dưới dạng một tập hợp các dịch vụ nhỏ hơn
+- Cơ sở hạ tầng dưới dạng mã (IaC) – nhu cầu thiết kế, triển khai và quản lý cơ sở hạ tầng ứng dụng thông qua code
+
+**Sự phát triển của DevOps**
 
 https://www.startechup.com/blog/history-of-devops/#2007
 https://everythingdevops.dev/a-brief-history-of-devops-and-its-impact-on-software-development/
@@ -51,15 +67,26 @@ Những cá nhân được đề cập ở trên là một số người có ả
 
 #### Lợi ích DevOps
 
+https://careerbuilder.vn/vi/talentcommunity/wiki-career/devops-engineer-lam-gi-cap-nhat-tu-a-den-z-ve-cong-viec-cua-devops.35A51FD7.html
 
+Lợi ích của chính DevOps đó là việc hoàn thiện, chuyển đổi quy trình phát triển và vận hành của phần mềm từ mô hình truyền thống Waterfall (thác nước) sang dạng mô hình CI/CD (phát triển liên tục).
+
+Ngoài ra, DevOps còn có một số lợi ích khác như:
+
+- Tốc độ: hoạt động với tốc độ nhanh và tần suất cao giúp cải thiện khả năng phục vụ khách hàng, thích nghi linh hoạt với thị trường thay đổi liên tục và đạt được hiệu quả kinh doanh đáng kể. Và DevOps là công cụ hỗ trợ cho các nhà phát triển và nhóm nghiệp vụ để đạt được những mục tiêu này.
+- Chuyển giao nhanh chóng: Việc tăng tần suất và nhịp độ phát hành là cần thiết để cải thiện và nâng cấp sản phẩm một cách nhanh chóng. Khi các tính năng mới được phát hành sẽ giúp khắc phục các sự cố kỹ thuật một cách nhanh chóng hơn, đáp ứng được các nhu cầu của khách hàng và tạo được lợi thế cạnh tranh.
+- Độ tin cậy: Mặc dù tốc độ chuyển giao được đẩy nhanh nhưng DevOps vẫn sẽ giúp đảm bảo được độ tin cậy, chất lượng của sản phẩm và trải nghiệm của người dùng cuối thông qua việc áp dụng CI /CD, Monitoring và Logging
+- Khả năng mở rộng: Nhờ sự tự động hóa và tính nhất quán của DevOps sẽ giúp quản lý hiệu quả những hệ thống phức tạp hay những hệ thống thường xuyên thay đổi ở mức rủi ro thấp nhất.
+- Cải thiện khả năng cộng tác: Việc xây dựng các nhóm làm việc hiệu quả hơn theo mô hình DevOps nhấn mạnh vào giá trị của sự tự chủ và trách nhiệm đối với công việc. Các nhà phát triển và nhóm nghiệp vụ cùng hợp tác chặt chẽ, chia sẻ trách nhiệm và phối hợp thực hiện các quy trình công việc. Điều này giúp giảm thiểu sự chậm trễ và tiết kiệm thời gian
+- Bảo mật: DevOps giúp quá trình được đẩy nhanh mà không ảnh hưởng đến tính bảo mật nhờ các chính sách tuân thủ tự động hóa, các công cụ kiểm soát và các kỹ thuật quản lý.
 
 #### Các giai đoạn của DevOps trong vòng đời phát triển phần mềm
 
 ![DevOps](https://orangematter.solarwinds.com/wp-content/uploads/2022/03/DevOps-lifecycle-capabilities-1024x621.png)
 
-Vòng đời phát triển phần mềm có thể được chia thành 8 giai đoạn chính: Plan, Code, Build, Test, Release, Deploy, Operate, Monitor.
+Với mô hình DevOps, vòng đời phát triển phần mềm có thể được chia thành 8 giai đoạn chính: Plan, Code, Build, Test, Release, Deploy, Operate, Monitor.
 
-Ở giai đoạn Plan - lên kế hoạch và thiết kế sản phẩm, kỹ sư DevOps sẽ tham gia thảo luận, đánh giá và đề xuất về:
+Ở giai đoạn Plan - lên kế hoạch và thiết kế sản phẩm, kỹ sư DevOps sẽ tham gia thảo luận, đánh giá và đưa ra đề xuất về:
 
 - Kiến trúc ứng dụng (Architeture): Phần mềm bao gồm những thành phần nào, luồng hoạt động ra sao, yêu cầu về cơ sở hạ tầng như nào để đội ngũ quản trị hạ tầng có thể đáp ứng được
 - Những phụ thuộc (Dependencies): Phần mềm yêu cầu những công nghệ kèm theo nào, hạ tầng có sẵn hay không, có dễ maintain hay không
@@ -105,15 +132,15 @@ Tham khảo:
 
 **GitOps**
 
-GitOps là một khung làm việc sử dụng các phương pháp hay nhất của DevOps để phát triển ứng dụng như kiểm soát phiên bản, tính cộng tác, sự tuân thủ nguyên tắc và quy trình CI/CD rồi áp dụng chúng vào tự động hóa cơ sở hạ tầng. Như tên gọi, GitOps lấy Git làm trung tâm của các hoạt động của đội nhóm, doanh nghiệp. Ý tưởng chính của GitOps là biến Git trở thành một nguồn của sự thật (Single Source of Truth - SSOT) lưu trữ toàn bộ cấu hình triển khai cơ sở hạ tầng cũng như cấu hình triển khai ứng dụng.
+Cùng với sự ra đời của DevOps, GitOps sinh ra như một khung làm việc sử dụng các phương pháp hay nhất của DevOps để phát triển ứng dụng như kiểm soát phiên bản, tính cộng tác, sự tuân thủ nguyên tắc và quy trình CI/CD rồi áp dụng chúng vào tự động hóa cơ sở hạ tầng. Như tên gọi, GitOps lấy Git làm trung tâm của các hoạt động của đội nhóm, doanh nghiệp. Ý tưởng chính của GitOps là biến Git trở thành Single Source of Truth (SSOT) - một nguồn của sự thật - lưu trữ toàn bộ cấu hình triển khai cơ sở hạ tầng cũng như cấu hình triển khai ứng dụng.
 
 GitOps yêu cầu 3 thành phần cốt lõi: GitOps = IaC + MRs + CI/CD
 
 - IaC (Infrastrcuture as Code) - Cơ sở hạ tầng dưới dạng mã: GitOps sử dụng kho lưu trữ Git làm SSOT duy nhất cho các định nghĩa cơ sở hạ tầng. Dựa vào tính năng kiểm soát phiên bản, theo dõi sự thay đổi mã nguồn của Git, việc thực hiện cơ sở hạ tầng dưới dạng mã giúp tăng tốc triển khai, giám sát trạng thái cấu hình hệ thống, đảm bảo khả năng phục hồi.
 
-- MR - Merge request: GitOps sử dụng các merge request làm cơ chế thay đổi cho tất cả các bản cập nhật cơ sở hạ tầng. MR là nơi các đội nhóm có thể cộng tác thông qua các đánh giá và nhận xét và là nơi ra phê duyệt quyết định thay đổi cơ sở hạ tầng chính thức.
+- Merge request (MR) - yêu cầu tích hợp mã nguồn: GitOps sử dụng các MR làm cơ chế thay đổi cho tất cả các bản cập nhật cơ sở hạ tầng. MR là nơi các đội nhóm có thể cộng tác thông qua các đánh giá và nhận xét và là nơi ra phê duyệt quyết định thay đổi cơ sở hạ tầng chính thức.
 
-- CI/CD : GitOps tự động cập nhật cơ sở hạ tầng bằng quy trình làm việc Git với tích hợp liên tục (CI) và phân phối liên tục (CD). Khi mã nguồn mới được hợp nhất, CI/CD pipeline thực hiện sự thay đổi trong môi trường. Bất kỳ sai lệch cấu hình nào, chẳng hạn như các thay đổi hoặc lỗi, đều được ghi đè bởi GitOps để môi trường thay đổi về trạng thái mong muốn được cấu hình trong Git.
+- CI/CD : GitOps tự động cập nhật cơ sở hạ tầng bằng quy trình làm việc Git với tích hợp liên tục (CI) và phân phối liên tục (CD). Khi mã nguồn mới được hợp nhất, CI/CD pipeline (Đường ống quy trình CI/CD) thực hiện sự thay đổi trong môi trường. Bất kỳ sai lệch cấu hình nào, chẳng hạn như các thay đổi hoặc lỗi, đều được ghi đè bởi GitOps để môi trường thay đổi về trạng thái mong muốn được cấu hình trong Git.
 
 GitOps cung cấp:
 
@@ -128,12 +155,36 @@ Trong đồ án này sẽ trình bày cụ thể về một trong các công c�
 
 ![DevSecOps](https://marvel-b1-cdn.bc0a.com/f00000000236551/dt-cdn.net/images/devsecops-image-2000-6557ba1b00.png)
 
-DevSecOps là mở rộng của DevOps. Thông thường khâu kiểm thử bảo mật là một khâu riêng biệt sẽ diễn ra bắt đầu từ cuối khâu phát triển phần mềm. DevSecOps cũng tự biến việc kiểm thử bảo mật thành một phần trong quá trình phát triển ứng dụng. Ví dụ: các đội ngũ bảo mật sẽ thiết lập tường lửa, lập trình viên thì thiết kế mã ngăn chặn lỗ hổng, còn kỹ sư kiểm thử sẽ tiến hành kiểm thử mọi thay đổi nhằm ngăn chặn truy cập trái phép của bên thứ ba. Việc áp dụng các nguyên tắc bảo mật ngay từ đầu giai đoạn phát triển phần mềm giúp phát hiện lỗ hổng sớm và dễ dàng khắc phục hơn là sau khi xây dựng xong một hệ thống phức tạp.
+Security là một lĩnh vực cũng rất quan trọng trong quy trình phát triển phần mềm tuy nhiên cho dù là đội nhóm phát triển hay đội nhóm vận hành, mindset về security vẫn còn lỏng lẻo. Trong khi đó đội nhóm kiểm thử bảo mật cũng hoạt động tách biệt. DevOps có thể giải quyết vấn đề giữa nhóm phát triển và nhóm vận hành tuy nhiên bức tranh phát triển phần mềm vẫn còn thiếu một phần nữa đó là Security. Vì vậy, DevSecOps ra đời như là một sự mở rộng của DevOps.
+
+DevSecOps phát triển từ DevOps khi các nhóm phát triển bắt đầu nhận ra rằng mô hình DevOps không giải quyết thỏa đáng các mối lo ngại về bảo mật. Thay vì trang bị thêm bảo mật vào bản dựng, DevSecOps nổi lên như một cách để tích hợp quản lý bảo mật sớm hơn trong suốt quá trình phát triển. Thông thường khâu kiểm thử bảo mật là một khâu riêng biệt sẽ diễn ra bắt đầu từ cuối khâu phát triển phần mềm. DevSecOps cũng tự biến việc kiểm thử bảo mật thành một phần trong quá trình phát triển ứng dụng. Ví dụ: các đội ngũ bảo mật sẽ thiết lập tường lửa, lập trình viên thì thiết kế mã ngăn chặn lỗ hổng, còn kỹ sư kiểm thử sẽ tiến hành kiểm thử mọi thay đổi nhằm ngăn chặn truy cập trái phép của bên thứ ba. Việc áp dụng các nguyên tắc bảo mật ngay từ đầu giai đoạn phát triển phần mềm giúp phát hiện lỗ hổng sớm và dễ dàng khắc phục hơn là sau khi xây dựng xong một hệ thống phức tạp.
+
+https://bizflycloud.vn/tin-tuc/devsecops-la-gi-kien-thuc-co-ban-ve-devsecops-20220113100737932.htm
+https://itguru.vn/blog/devsecops-la-gi-va-khac-the-nao-voi-devops/
+DevSecOps bao gồm các phương pháp của DevOps, thêm vào đó:
+
+    Liệt kê các điểm yếu chung (Common weaknesses enumeration – CWE): cải thiện chất lượng code và tăng mức độ bảo mật trong giai đoạn CI và CD
+    Mô hình hóa mối đe dọa (Threat modeling): thực hiện kiểm tra bảo mật trong quá trình phát triển để tiết kiệm thời gian và chi phí trong tương lai
+    Kiểm tra bảo mật tự động: kiểm tra lỗ hổng bảo mật trong các bản dựng mới thường xuyên
+    Quản lý sự cố – tạo ra một khuôn khổ tiêu chuẩn để ứng phó với các sự cố bảo mật
+
 
 Chúng ta có thể tham khảo luồng hoạt động của DevSecOps như hình dưới.
 
 ![DevSecOps pipeline](https://d33wubrfki0l68.cloudfront.net/81fbed5f6b2223cbb02b799bbd6216860c2d0c32/e0ecd/assets/img/blog/devsecops-pipeline/devsecops-pipeline-diagram.png)
 
+Bằng việc đưa các nguyên tắc bảo mật vào từng giai đoạn trong CI/CD pipeline. DevSecOps có thể nâng cao chất lượng an toàn cho sản phẩm. Cụ thể trong DevSecOps pipeline có thể chia ra 6 giai đoạn và tiến hành kiểm thử bảo mật:
+
+- Giai đoạn 1: Plan/Design - Lên kế hoạch/Thiết kế
+- Giải đoạn 2: Develop - Phát triển
+- Giai đoạn 3: Build and Code analysis - Xây dựng và phân tích mã nguồn
+- Giai đoạn 4: Test - Kiểm thử
+- Giai đoạn 5: Deploy - Triển khai
+- Giai đoạn 6: Monitor and Alert - Giám sát và cảnh báo
+
+Chi tiết: https://www.infracloud.io/blogs/implement-devsecops-secure-ci-cd-pipeline/
+
+https://aws.amazon.com/vi/what-is/devsecops/
 Lợi ích của việc sử dụng DevSecOps là gì?
 
     Tìm lỗ hổng và lỗi ở giai đoạn phát triển trước đó
@@ -147,7 +198,11 @@ Lợi ích của việc sử dụng DevSecOps là gì?
 
 ### Hệ thống CI/CD
 
+Ở phần trên chúng ta đã tìm hiểu về DevOps và có nhắc tới CI/CD. DevOps ra đời mang theo một mô hình phát triển phần mềm mới đó là hệ thống tự động hóa CI/CD. Có thể nói CI/CD chính là trái tim của DevOps. Trong chương này ta sẽ tìm hiểu hệ thống CI/CD là gì? CI/CD pipeline là gì? Cách thức triển khai, v.v...
+
 #### CI/CD là gì?
+
+https://tigosoftware.com/vi/duong-ong-tich-hop-cicd-pipeline-la-gi
 
 ![ci-cd-pipline](https://solidstudio.io/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Flofvu8al%2Fproduction%2Fe37ce13c88889f048aa2b1acae7d6cbfeea5678f-2048x876.png&w=2048&q=75)
 
@@ -355,7 +410,7 @@ Trên Control node:
 - Sửa đổi file host để dễ dàng truy cập vào các ứng dụng trên Manage node sau khi cài đặt xong
 - Cài đặt `kubectl` và `Helm` để tương tác tới K8s cluster
 - (Sau khi cụm K8s được cài xong và Ready) Cài đặt ArgoCD bằng Helm
-- Lấy password 
+- Lấy password
 
 Trên Managed node:
 
@@ -404,4 +459,3 @@ Tiếp đó anh ấy truy cập vào App để kiểm tra tính năng mới đư
 Như vậy trong trường hợp lý tưởng nhất, không xảy ra gián đoạn ở bất cứ khâu nào trong hệ thống CI/CD. Một tính năng mới đã được đưa tới người dùng chỉ sau vài phút các nhà phát triển commit code lên git repository. Tốc độ phát hành rất nhanh chóng kéo theo tần suất phát hành thường xuyên hơn giúp ứng dụng liên tục được nâng cấp, cải thiện chất lượng dịch vụ.
 
 ## Chương 4: Kết luận
-
