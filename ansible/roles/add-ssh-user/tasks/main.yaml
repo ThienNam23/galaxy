@@ -1,0 +1,41 @@
+---
+- name: Create SHH private and public key
+  become: false
+  run_once: true
+  delegate_to: localhost
+  block:
+    - name: Check if private key exists
+      ansible.builtin.stat:
+        path: "~/.ssh/id_rsa"
+      register: private_key_stat
+
+    - name: Create ssh private key and public key if not exists
+      ansible.builtin.shell:
+        cmd: |
+          ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ""
+      when: private_key_stat.stat.exists == False
+
+- name: Create group
+  ansible.builtin.group:
+    name: "{{ user_ssh }}"
+    state: present
+
+- name: Add user {{ user_ssh }} with sudo
+  ansible.builtin.user:
+    name: "{{ user_ssh }}"
+    shell: /bin/bash
+    group: "{{ user_ssh }}"
+    create_home: true
+
+- name: set no password for sudo
+  lineinfile:
+    path: "/etc/sudoers"
+    line: "{{ user_ssh }} ALL=(ALL) NOPASSWD: ALL"
+
+- name: Set authorized key taken from file
+  # require ansible-galaxy collection install ansible.posix 
+  # https://docs.ansible.com/ansible/latest/collections/ansible/posix/authorized_key_module.html
+  ansible.posix.authorized_key:
+    user: "{{ user_ssh }}"
+    state: present
+    key: "{{ lookup('file', public_key | default('~/.ssh/id_rsa.pub', true)) }}"

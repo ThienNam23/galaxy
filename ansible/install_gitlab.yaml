@@ -1,9 +1,9 @@
 ---
-- name: Install RKE2
-  hosts: all
+- name: Install Gitlab
+  hosts: gitlab
   become: true
   vars:
     ansible_user: "thiennam23"
     ansible_ssh_private_key_file: "{{ private_key | default('~/.ssh/id_rsa', true) }}"
   roles:
-    - rke2
+    - gitlab

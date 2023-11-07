@@ -414,13 +414,13 @@ Trên Control node:
 
 Trên Managed node:
 
-- Master:
+- master:
   - Cài dặt RKE2 với server mode để chỉ định đây là master node trong K8s cluster
   - Lấy file kubeconfig về để điều khiển K8s cluster thông qua `kubectl`
   - Lấy server token về để thực hiện join các worker node vào cụm K8s
-- Worker-1:
+- worker-1:
   - Cài dặt RKE2 với agent mode và server token để chỉ định đây là worker node trong K8s cluster
-- Worker-2:
+- worker-2:
   - Cài dặt RKE2 với agent mode và server token để chỉ định đây là worker node trong K8s cluster
   - Cài đặt Gitlab, Gitlab Runner
 

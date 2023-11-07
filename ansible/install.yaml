@@ -1,11 +1,3 @@
-# ansible-playbook -i inventory/hosts.yaml install.yaml
-
-- name: Download ES on local
-  hosts: localhost
-  roles:
-    - download_es
-    - gen-cert
-
 - name: Add user, group and ssh key for elasticsearch
   hosts: elasticsearch
   become: true

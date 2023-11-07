@@ -1,1 +1,45 @@
-- name: 
+---
+- name: Install necessary packages
+  ansible.builtin.apt:
+    pkg: 
+      - curl
+      - openssh-server
+      - ca-certificates
+      - tzdata
+      - perl
+    state: present
+    update_cache: yes
+
+- name: Add Gitlab repository
+  ansible.builtin.shell:
+    cmd: |
+      curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | sudo bash
+
+- name: Add entry to /etc/hosts
+  block:
+    - name: Set facts
+      ansible.builtin.set_fact:
+        host_line: "{{ hostvars[inventory_hostname].ansible_host }} {{ domain_prefix_gitlab }}.{{ domain }}"
+
+    - name: Check if the entry exists
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        line: "{{ host_line }}"
+        state: present
+      check_mode: yes
+      register: entry
+
+    - name: Add entry if not exists
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        line: "{{ host_line }}"
+      when: entry is changed
+
+- name: Install Gitlab CE
+  ansible.builtin.apt:
+    name: gitlab-ce
+    state: present
+    update_cache: yes
+  environment:
+    GITLAB_ROOT_PASSWORD: "{{ gitlab_root_password }}"
+    EXTERNAL_URL: "http://{{ domain_prefix_gitlab }}.{{ domain }}"

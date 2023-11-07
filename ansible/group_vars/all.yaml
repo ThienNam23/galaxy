@@ -1,1 +1,13 @@
+## SSH
+user_ssh: thiennam23
+
+## Global config
+domain: thiennam23.dev
+domain_prefix_gitlab: gitlab
+
+## Gitlab
+gitlab_root_password: Lz46IkI06YsHKtpRmRnGKIOWqpzQU1Q9
+gitlab_root_password_new: j6V4Y597vOuM77hrLPjUxzyh3bw1ttIO
+
+## RKE2
 install_rke2_type: server

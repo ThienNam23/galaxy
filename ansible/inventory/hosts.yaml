@@ -13,3 +13,7 @@ all:
     workers:
       hosts:
         host_worker1:
+        host_worker2:
+    gitlab: # only one host
+      hosts:
+        host_worker2:
