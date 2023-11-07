@@ -1,0 +1,63 @@
+kube-prometheus-stack:
+  enabled: true
+  grafana:
+    defaultDashboardsTimezone: Asia/Ho_Chi_Minh
+    adminPassword: thiennam23
+    service:
+      type: NodePort
+    persistence:
+      accessModes:
+      - ReadWriteOnce
+      enabled: true
+      size: 3Gi
+    plugins:
+      - grafana-polystat-panel
+
+  kubeEtcd:
+    service:
+      port: 2379
+      targetPort: 2379
+  kubeScheduler:
+    service:
+      port: 10259
+      targetPort: 10259
+    serviceMonitor:
+      https: true
+      insecureSkipVerify: true
+  nodeExporter:
+    enabled: true
+
+  prometheus:
+    prometheusSpec:
+      serviceMonitorSelectorNilUsesHelmValues: false
+      additionalScrapeConfigs:
+        - job_name: 'istiod'
+          kubernetes_sd_configs:
+          - role: endpoints
+            namespaces:
+              names:
+              - istio-system
+          relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: istiod;http-monitoring
+        - job_name: 'envoy-stats'
+          metrics_path: /stats/prometheus
+          kubernetes_sd_configs:
+          - role: pod
+
+          relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_container_port_name]
+            action: keep
+            regex: '.*-envoy-prom'
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+            - ReadWriteOnce
+            resources:
+              requests:
+                storage: 5Gi
+
+    service:
+      type: NodePort

@@ -1,0 +1,29 @@
+---
+# Source: argocd-templates/templates/application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bootstrap-apps
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    app-owner: thiennam23
+spec:
+  project: bootstrap-apps
+  source:
+    repoURL: https://gitlab.com/gitops44/argocd.git
+    targetRevision: HEAD
+    path: argocd-apps/bootstrap-apps
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    # automated:
+    #   prune: true
+    #   selfHeal: true
+    #   allowEmpty: false
+    syncOptions: 
+    - CreateNamespace=true

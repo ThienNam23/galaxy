@@ -1,0 +1,23 @@
+---
+# Source: argocd-templates/templates/project.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: bootstrap-apps
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: Apps using the same repo creds with ArgoCd
+  sourceRepos: 
+    - https://gitlab.com/gitops44/argocd.git
+  destinations:
+  - namespace: '*'
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  

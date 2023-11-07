@@ -1,0 +1,124 @@
+argocdGitSecret:
+  enabled: true
+  url: "http://argocd.thiennam23.dev"
+  username: "thiennam23"
+  token: "token"
+
+argo-cd:
+  configs:
+    cm:
+      url: "http://argocd.thiennam23.dev"
+      exec.enabled: true
+      dex.config: |
+        connectors:
+          - type: gitlab
+            id: gitlab
+            name: GitLab
+            config:
+              baseURL: https://gitlab.thiennam23.dev
+              clientID: <client-id>
+              clientSecret: <client-secret>
+    params:
+      controller.repo.server.timeout.seconds: 180
+    secret:
+      gitlabSecret: <gitlab-secret>
+    rbac:
+      policy.csv: |
+        g, trungnam23032001@gmail.com, role:admin
+      scopes: "[email, groups]"
+    repositories: 
+      private-helm-repo:
+        url: https://gitlab.thiennam23.dev
+        name: argocd-repo
+        type: helm
+        password: my-password
+        username: trungnam23032001
+  server:
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - argocd.thiennam23.dev
+
+argocd-apps:
+  applications:
+  - name: argocd
+    namespace: argocd
+    finalizers:
+      - resources-finalizer.argocd.argoproj.io
+    destination:
+      namespace: argocd
+      server: https://kubernetes.default.svc
+    project: argocd
+    source:
+      helm:
+        version: v3
+        valueFiles:
+          - values.yaml
+      path: argocd-install
+      repoURL: http://gitlab.thiennam23.dev/devops/argocd.git
+      targetRevision: HEAD
+    syncPolicy:
+      syncOptions:
+      - CreateNamespace=true
+    ignoreDifferences:
+    - kind: Secret
+      name: argocd-repo-creds
+      jqPathExpressions:
+      - .data.password
+      - .data.username
+  - name: argocd-apps
+    namespace: argocd
+    finalizers:
+      - resources-finalizer.argocd.argoproj.io
+    destination:
+      namespace: argocd
+      server: https://kubernetes.default.svc
+    project: argocd
+    source:
+      path: argocd-apps/app-of-apps
+      repoURL: http://gitlab.thiennam23.dev/devops/argocd.git
+      targetRevision: HEAD
+      directory:
+        recurse: true
+        jsonnet: {}
+    syncPolicy:
+      automated:
+        selfHeal: true
+        prune: true
+  - name: argocd-appprojects
+    namespace: argocd
+    finalizers:
+      - resources-finalizer.argocd.argoproj.io
+    destination:
+      namespace: argocd
+      server: https://kubernetes.default.svc
+    project: argocd
+    source:
+      path: argocd-appprojects
+      repoURL: http://gitlab.thiennam23.dev/devops/argocd.git
+      targetRevision: HEAD
+      directory:
+        recurse: true
+        jsonnet: {}
+    syncPolicy:
+      automated:
+        selfHeal: true
+        prune: true
+
+  projects:
+  - name: argocd
+    namespace: argocd
+    finalizers:
+    - resources-finalizer.argocd.argoproj.io
+    description: Argocd Project
+    sourceRepos:
+    - '*'
+    destinations:
+    - namespace: "*"
+      server: "*"
+    clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+    orphanedResources:
+      warn: false

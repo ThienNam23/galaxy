@@ -1,0 +1,31 @@
+---
+# Source: argocd-templates/templates/application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ingress-nginx
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    app-owner: thiennam23
+spec:
+  project: bootstrap-apps
+  source:
+    repoURL: https://gitlab.com/gitops44/argocd.git
+    targetRevision: main
+    path: bootstrap-apps-manifest/ingress-nginx
+    helm:
+      releaseName: ingress-nginx
+      valueFiles: 
+      - values.yaml
+      version: v3
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ingress-nginx
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions: 
+    - CreateNamespace=true

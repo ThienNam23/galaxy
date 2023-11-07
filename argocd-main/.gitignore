@@ -1,0 +1,8 @@
+.local
+**/.local
+**/out.yaml
+**/charts/poly
+# **/install.yaml
+**/values/
+istio-1.19.3/
+

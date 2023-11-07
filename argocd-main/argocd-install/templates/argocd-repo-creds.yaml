@@ -1,0 +1,17 @@
+{{- if .Values.argocdGitSecret.enabled }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  annotations:
+    managed-by: argocd.argoproj.io
+  labels:
+    argocd.argoproj.io/secret-type: repo-creds
+  name: argocd-repo-creds
+  namespace: argocd
+type: Opaque
+data:
+  password: {{ .Values.argocdGitSecret.token | b64enc }}
+  url: {{ .Values.argocdGitSecret.url | b64enc }}
+  username: {{ .Values.argocdGitSecret.username | b64enc }}
+{{- end }}

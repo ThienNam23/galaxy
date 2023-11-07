@@ -1,0 +1,31 @@
+---
+# Source: argocd-templates/templates/application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    app-owner: thiennam23
+spec:
+  project: bootstrap-apps
+  source:
+    repoURL: https://gitlab.com/gitops44/argocd.git
+    targetRevision: main
+    path: bootstrap-apps-manifest/kube-prometheus-stack
+    helm:
+      releaseName: kube-prometheus-stack
+      valueFiles: 
+      - values.yaml
+      version: v3
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    # automated:
+    #   prune: true
+    #   selfHeal: true
+    syncOptions: 
+    - CreateNamespace=true
