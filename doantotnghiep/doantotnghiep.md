@@ -406,7 +406,6 @@ Ansible playbook thực hiện những tác vụ sau:
 Trên Control node:
 
 - Tạo SSH key
-- Thêm thông tin đăng nhập SSH tới từng Managed node vào file `~/.ssh/config`
 - Sửa đổi file host để dễ dàng truy cập vào các ứng dụng trên Manage node sau khi cài đặt xong
 - Cài đặt `kubectl` và `Helm` để tương tác tới K8s cluster
 - (Sau khi cụm K8s được cài xong và Ready) Cài đặt ArgoCD bằng Helm
@@ -432,6 +431,14 @@ Ta có các đường dẫn sau để truy cập vào các ứng dụng:
 - `http://vault.thiennam23.dev`: Truy cập vào giao diện Vault
 - `http://myapp-dev.thiennam23.dev`: Truy cập vào giao diện App của môi trường develop
 - `http://myapp.thiennam23.dev`: Truy cập vào giao diện App trên môi trường production
+
+**Chuẩn bị Gitlab**
+
+Truy cập vào Gitlab với tài khoản root, mật khẩu được lưu trong file `galaxy/ansible/group_vars/all.yaml` với biến `gitlab_root_password`. Ta cần thực hiện một số công việc như sau:
+
+- Thay đổi mật khẩu root với biến `gitlab_root_password_new`
+- Tạo account cho Adminítrator và Developer
+- Tạo Group và Project cho ArgoCD manifest để cài đặt ArgoCD và các ứng dụng khác theo phương pháp GitOps
 
 ### Kịch bản
 

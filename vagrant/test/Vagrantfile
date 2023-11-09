@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant"
 
   config.vm.provider "virtualbox" do |vb|
-    vb.memory = "3072"
+    vb.memory = "3572"
     vb.cpus = "3"
     vb.linked_clone = true
   end
