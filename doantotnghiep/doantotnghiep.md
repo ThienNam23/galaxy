@@ -301,6 +301,8 @@ Trong phạm vi đồ án, chúng ta sẽ thực hiện lab trên một máy tí
    - kubectl + Helm
    - kubectx + kubens: optional
 
+Trong bài ta sẽ tương tác với các máy chủ ảo, để phân biệt ta gọi máy tính điều khiển là Control node và các máy ảo là Managed node, khái niệm này đến từ Ansible nên khi sử dụng các công cụ cũng thuận tiện hơn.
+
 Control node có cấu hình như sau:
 
 - Hệ điều hành: Kubuntu 22.04 LTS
