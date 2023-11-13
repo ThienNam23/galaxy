@@ -1,30 +1,38 @@
-# ansible-playbook -i inventory/hosts.yaml install.yaml
-
-- name: Download ES on local
-  hosts: localhost
-  roles:
-    - download_es
-    - gen-cert
-
-- name: Add user, group and ssh key for elasticsearch
-  hosts: elasticsearch
+---
+- name: Add user, group and ssh key for all node
+  hosts: all
   become: true
-  remote_user: namtt
   vars:
-    ansible_user: "namtt"
-    ansible_ssh_pass: "changeme"
-    ansible_become_pass: "changeme"
-    username_to_add: "{{ elasticsearch_user }}"
-    group_to_add: "{{ elasticsearch_group }}"
+    ansible_user: "vagrant"
+    ansible_ssh_private_key_file: "~/.vagrant.d/insecure_private_key"
   roles:
-    - add-user
-    - add-key
+    - add-ssh-user
 
-- name: Install Elasticsearch
-  hosts: elasticsearch
-  become: false
-  remote_user: "{{ elasticsearch_user }}"
+- name: Add host entries
+  hosts: all
+  become: true
   vars:
+    ansible_user: "thiennam23"
+    ansible_ssh_private_key_file: "{{ private_key | default('~/.ssh/id_rsa', true) }}"
+  tasks:
+    - name: Add host entries
+      include_tasks: roles/general/tasks/modify_host.yaml
+      loop: "{{ host_entries }}"
+
+- name: Install Gitlab
+  hosts: gitlab
+  become: true
+  vars:
+    ansible_user: "thiennam23"
     ansible_ssh_private_key_file: "{{ private_key | default('~/.ssh/id_rsa', true) }}"
   roles:
-    - elasticsearch
+    - gitlab
+
+- name: Install RKE2
+  hosts: all
+  become: true
+  vars:
+    ansible_user: "thiennam23"
+    ansible_ssh_private_key_file: "{{ private_key | default('~/.ssh/id_rsa', true) }}"
+  roles:
+    - rke2

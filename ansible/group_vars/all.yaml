@@ -1,1 +1,24 @@
+## SSH
+user_ssh: thiennam23
+
+## Global config
+domain: thiennam23.dev
+domain_prefix_gitlab: gitlab
+
+## Gitlab
+gitlab_root_password: Lz46IkI06YsHKtpRmRnGKIOWqpzQU1Q9
+gitlab_root_password_new: j6V4Y597vOuM77hrLPjUxzyh3bw1ttIO
+gitlab_admin_password: 33Qw0o9zjXIpj8EQwMzgq20wjdmnuIaz
+gitlab_developer_password: zIv4V02I2wGagcx8D6FKxPPgxP4nrrg6
+
+## RKE2
 install_rke2_type: server
+
+## Host domains
+host_entries:
+- 192.168.57.102 gitlab.thiennam23.dev
+- 192.168.57.100 argocd.thiennam23.dev
+- 192.168.57.100 longhorn.thiennam23.dev
+- 192.168.57.100 vault.thiennam23.dev
+- 192.168.57.100 myapp-dev.thiennam23.dev
+- 192.168.57.100 myapp.thiennam23.dev

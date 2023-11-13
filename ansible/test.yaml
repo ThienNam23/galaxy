@@ -1,0 +1,11 @@
+---
+- name: All
+  hosts: localhost
+  become: false
+  # vars:
+  #   ansible_user: "thiennam23"
+  #   ansible_ssh_private_key_file: "{{ private_key | default('~/.ssh/id_rsa', true) }}"
+  tasks:
+    - name: Modify hosts
+      include_tasks: roles/general/tasks/modify_host.yaml
+      loop: "{{ host_entries }}"
