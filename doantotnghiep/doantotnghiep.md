@@ -220,17 +220,31 @@ https://about.gitlab.com/blog/2022/02/15/ten-reasons-why-your-business-needs-ci-
 
 ## Chương 3: Triển khai hệ thống CI/CD
 
+Trong chương này ta sẽ tìm hiểu các công cụ thành phần dể xây dựng nên một hệ thống CI/CD, cách cài đặt hệ thống CI/CD và áp dụng hệ thống vào dự án thực tế.
+
 ### Các công nghệ sử dụng
 
-- Vagrant + VirtualBox: Tạo máy ảo
-- Ansible:
-  - Dựng k8s cluster
-  - Cài đặt Gitlab, Gitlab runner
+- Vagrant + VirtualBox: Tạo các máy ảo
+- Ansible: Dựng cụm K8s bằng RKE2, cài đặt Gitlab lên máy ảo
+- RKE2: Công cụ giúp dựng cụm K8s
+- Gitlab: Kho lưu trữ mã nguồn
 
-- RKE2: Môi trường k8s
-- ArgoCD: Công cụ chạy CD được cài đặt trên môi trường k8s
+Trên môi trường K8s ta cài đặt các công cụ sau:
 
-Môi trường lab: Hệ điều hành Kubuntu 22.04 LTS
+- ArgoCD: Công cụ triển khai CD theo phương pháp GitOps
+- Longhorn:
+- HashiCorp Vault + External Secrets: (Secrets Management System) Trình quản lý thông tin bí mật
+- Ingress Nginx: Ingress controller for Kubernetes using NGINX as a reverse proxy and load balancer
+- Gitlab Runner: Gitlab runner để chạy CI pipeline
+
+Trong phạm vi đồ án, chúng ta sẽ thực hiện lab trên một máy tính với các yêu cầu sau:
+
+- Hệ điều hành: Kubuntu 22.04 LTS
+- Các công cụ cần thiết:
+   - Python + Pip
+   - Vagrant + VirtualBox
+   - kubectl + Helm
+   - kubectx + kubens: optional
 
 ### Tạo máy ảo với Vagrant và VirtualBox
 
