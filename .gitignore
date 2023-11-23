@@ -1,0 +1,10 @@
+# General
+**/.vagrant/
+
+# Log files (if you are creating logs in debug mode, uncomment this)
+*.log
+
+argocd/.git/
+myapp/be/.git/
+myapp/fe/.git/
+**/test/

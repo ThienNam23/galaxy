@@ -1,0 +1,36 @@
+---
+# Source: argocd-templates/templates/application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vault
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    app-owner: thiennam23
+spec:
+  project: bootstrap-apps
+  source:
+    repoURL: http://gitlab.galaxy.dev/devops/argocd.git
+    targetRevision: main
+    path: bootstrap-apps-manifest/vault
+    helm:
+      releaseName: vault
+      valueFiles: 
+      - values.yaml
+      version: v3
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vault
+  syncPolicy:
+    # automated:
+    #   prune: true
+    #   selfHeal: true
+    syncOptions: 
+    - CreateNamespace=true
+  ignoreDifferences:
+  - group: admissionregistration.k8s.io
+    kind: MutatingWebhookConfiguration
+    jqPathExpressions:
+    - .webhooks[]?.clientConfig.caBundle

@@ -1,0 +1,36 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: galaxy-landing=registry.gitlab.com/cyanwind23/galaxy-landing
+    argocd-image-updater.argoproj.io/write-back-method: git:repocreds
+    argocd-image-updater.argoproj.io/galaxy-landing.update-strategy: name
+    argocd-image-updater.argoproj.io/galaxy-landing.allow-tags: regexp:^prod-[0-9]{14}-[0-9a-zA-Z]+$
+    argocd-image-updater.argoproj.io/galaxy-landing.helm.image-name: polylite.image.repository
+    argocd-image-updater.argoproj.io/galaxy-landing.helm.image-tag: polylite.image.tag
+    argocd-image-updater.argoproj.io/galaxy-landing.pull-secret: pullsecret:argocd/regcreds-galaxy-landing
+  name: galaxy-landing
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: galaxy-landing
+  source:
+    repoURL: http://gitlab.galaxy.dev/devops/argocd.git
+    targetRevision: main
+    path: manifest/galaxy-landing
+    helm:
+      releaseName: galaxy-landing
+      valueFiles: 
+      - values.yaml
+      version: v3
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: galaxy-landing
+  syncPolicy:
+    # automated:
+    #   prune: true
+    #   selfHeal: true
+    syncOptions: 
+    - CreateNamespace=true

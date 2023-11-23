@@ -1,0 +1,6 @@
+dependencies:
+- name: polylite
+  repository: file://../polylite
+  version: 1.0.0
+digest: sha256:0483e8fa3097c18cd09ece83b35b1fb1adc3688b94d86c9c40da9607dbc83629
+generated: "2023-11-19T23:51:58.022885315+07:00"

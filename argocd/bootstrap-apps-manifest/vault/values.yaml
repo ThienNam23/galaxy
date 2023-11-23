@@ -1,0 +1,43 @@
+vault:
+  enabled: true
+  injector:
+    enabled: true
+    webhook:
+      objectSelector:
+        matchLabels:
+          vault-sidecar-injector: enabled
+  server:
+    serviceAccount:
+      createSecret: true
+    dataStorage:
+      size: 1Gi
+    ingress:
+      enabled: true
+      ingressClassName: "nginx"
+      hosts:
+        - host: vault.galaxy.dev
+          paths: ["/"]
+    standalone:
+      enabled: false
+    ha:
+      enabled: true
+      replicas: 1
+      raft:
+        enabled: true
+        config: |
+          ui = true
+
+          listener "tcp" {
+            tls_disable = 1
+            address = "[::]:8200"
+            cluster_address = "[::]:8201"
+          }
+
+          storage "raft" {
+            path = "/vault/data"
+          }
+
+          service_registration "kubernetes" {}
+          max_lease_ttl = "8760h"
+    ui:
+      enabled: true

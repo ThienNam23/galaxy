@@ -1,0 +1,8 @@
+helm:
+  parameters:
+  - name: polylite.image.repository
+    value: registry.gitlab.com/cyanwind23/galaxy-landing
+    forcestring: true
+  - name: polylite.image.tag
+    value: prod-20231121140222-13c34bbb
+    forcestring: true

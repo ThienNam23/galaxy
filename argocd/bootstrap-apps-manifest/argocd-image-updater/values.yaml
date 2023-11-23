@@ -1,0 +1,10 @@
+argocd-image-updater:
+  enabled: true
+  extraArgs:
+    - --interval
+    - 15s
+
+regcreds:
+  - name: regcreds-galaxy-landing
+    key: secrets/data/projects/galaxy-landing/regcred
+    role: galaxy-landing-regcred-ro

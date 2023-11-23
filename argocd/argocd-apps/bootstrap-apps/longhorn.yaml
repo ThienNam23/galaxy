@@ -1,0 +1,31 @@
+---
+# Source: argocd-templates/templates/application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: longhorn
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    app-owner: thiennam23
+spec:
+  project: bootstrap-apps
+  source:
+    repoURL: http://gitlab.galaxy.dev/devops/argocd.git
+    targetRevision: main
+    path: bootstrap-apps-manifest/longhorn
+    helm:
+      releaseName: longhorn
+      valueFiles: 
+      - values.yaml
+      version: v3
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: longhorn-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions: 
+    - CreateNamespace=true

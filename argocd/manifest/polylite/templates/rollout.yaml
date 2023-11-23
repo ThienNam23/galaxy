@@ -1,0 +1,32 @@
+{{- if and .Values.enabled .Values.rollout.enabled -}}
+{{- $blueGreen := .Values.rollout.strategy.blueGreen -}}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: {{ include "polylite.fullname" . }}
+  labels:
+    {{- include "polylite.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicas }}
+  {{- end }}
+  strategy: 
+    blueGreen:
+    {{- if not $blueGreen.activeService }}
+      activeService: {{ include "polylite.fullname" . }}
+    {{- end -}}
+    {{- if not $blueGreen.previewService }}
+      previewService: {{ include "polylite.fullname" . }}-preview
+    {{- end -}}
+    {{- toYaml $blueGreen | nindent 6 }}
+  revisionHistoryLimit: {{ max .Values.revisionHistoryLimit 3 }}
+  progressDeadlineSeconds: {{ .Values.progressDeadlineSeconds }}
+  selector:
+    matchLabels:
+      {{- include "polylite.selectorLabels" . | nindent 6 }}
+  workloadRef:
+    apiVersion: apps/v1
+    kind: {{ .Values.deployType }}
+    name: {{ include "polylite.fullname" . }}
+{{ end }}

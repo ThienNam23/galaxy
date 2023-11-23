@@ -1,0 +1,25 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: galaxy-landing
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: Galaxy Landing project
+  sourceRepos: 
+    - http://gitlab.galaxy.dev/devops/argocd.git
+  destinations:
+  - namespace: argocd
+    server: https://kubernetes.default.svc
+  - namespace: galaxy-landing
+    server: https://kubernetes.default.svc
+  - namespace: galaxy-landing-dev
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'

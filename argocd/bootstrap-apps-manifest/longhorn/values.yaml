@@ -1,0 +1,14 @@
+longhorn:
+  defaultSettings:
+    nodeDownPodDeletionPolicy: do-nothing
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    host: longhorn.galaxy.dev
+
+serviceMonitor:
+  enabled: false
+  endpoint:
+    path: /metrics
+    port: manager
+    interval: 30s

@@ -1,0 +1,25 @@
+---
+- name: Install necessary packages
+  ansible.builtin.apt:
+    pkg: 
+      - curl
+      - openssh-server
+      - ca-certificates
+      - tzdata
+      - perl
+    state: present
+    update_cache: yes
+
+- name: Add Gitlab repository
+  ansible.builtin.shell:
+    cmd: |
+      curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | sudo bash
+
+- name: Install Gitlab CE
+  ansible.builtin.apt:
+    name: gitlab-ce
+    state: present
+    update_cache: yes
+  environment:
+    GITLAB_ROOT_PASSWORD: "{{ gitlab_default_password }}"
+    EXTERNAL_URL: "http://{{ domain_prefix_gitlab }}.{{ domain }}"

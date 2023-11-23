@@ -1,0 +1,9 @@
+node-ip: {{ ansible_host }}
+{% if 'masters' in group_names %}
+disable:
+- rke2-ingress-nginx
+{% endif %}
+{% if 'workers' in group_names %}
+server: https://{{ hostvars[groups['masters'][0]].ansible_host }}:9345
+token: {{ node_token }}
+{% endif %}

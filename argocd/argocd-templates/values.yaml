@@ -1,0 +1,43 @@
+project:
+  enabled: false
+  projectName: hello
+  description: "Project for Hello"
+  sourceRepos: ["http://gitlab.galaxy.dev/devops/argocd.git"]
+  appNamespace: argocd
+  clusterResource:
+    whitelist: []
+  namespaceResource:
+    blacklist: []
+    whitelist: []
+  roles: []
+
+application:
+  enabled: false
+  appName: hello
+  namespace: default
+  project: default
+  extraLabels: {}
+  annotations: {}
+  repo:
+    url: "http://gitlab.galaxy.dev/devops/argocd.git"
+    branch: "master"
+    pathToHelm: "helm"
+  helm:
+    enabled: true
+    releaseName: "hello"
+    valueFiles:
+      - values.yaml
+  enabledRecurse: true
+  syncPolicy:
+    auto: false
+    options:
+      - CreateNamespace=true
+      # - Validate=false
+      # - PrunePropagationPolicy=foreground
+      # - PruneLast=true
+    retry: {}
+      # limit: 5
+      # backoff:
+      #   duration: 5s
+      #   factor: 2
+      #   maxDuration: 3m

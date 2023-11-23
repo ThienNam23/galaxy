@@ -1,0 +1,32 @@
+gitlab-runner:
+  enabled: true
+  image:
+    tag: alpine3.18-v16.5.0
+
+  gitlabUrl: http://gitlab.galaxy.dev
+  runnerToken: "<your-gitlab-runner-token>"
+
+  ## For RBAC support:
+  rbac:
+    create: true
+    rules:
+    - resources: ["configmaps", "events", "pods", "pods/attach", "pods/exec", "secrets", "services"]
+      verbs: ["get", "list", "watch", "create", "patch", "update", "delete"]
+    - apiGroups: [""]
+      resources: ["pods/exec"]
+      verbs: ["create", "patch", "delete"]
+    - apiGroups: [""]
+      resources: ["pods/log"]
+      verbs: ["get"]
+  runners:
+    config: |
+      [[runners]]
+        [runners.kubernetes]
+          namespace = "{{.Release.Namespace}}"
+          image = "gcr.io/kaniko-project/executor:v1.14.0-debug"
+          [runners.kubernetes.node_selector]
+            "kubernetes.io/hostname" = "worker"
+    executor: kubernetes
+
+  nodeSelector: 
+    kubernetes.io/hostname: worker

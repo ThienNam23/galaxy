@@ -1,0 +1,25 @@
+---
+- name: Install Gitlab
+  hosts: gitlab
+  become: true
+  vars:
+    ansible_user: "thiennam23"
+    ansible_ssh_private_key_file: "{{ private_key | default('~/.ssh/id_rsa', true) }}"
+  tasks:
+    - name: Set facts
+      ansible.builtin.set_fact:
+        host_line: "{{ hostvars[inventory_hostname].ansible_host }} {{ domain_prefix_gitlab }}.{{ domain }}"
+
+    - name: "Searching for a String"
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ host_line }}"
+        state: present
+      check_mode: yes
+      register: presence
+
+    - name: "Add line if not present"
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ host_line }}"
+      when: presence is changed

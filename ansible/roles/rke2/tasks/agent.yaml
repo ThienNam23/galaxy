@@ -1,0 +1,24 @@
+---
+- name: Get server token
+  delegate_to: "{{ groups['masters'][0] }}"
+  ansible.builtin.slurp:
+    src: /var/lib/rancher/rke2/server/node-token
+  register: node_token
+
+- name: Set variable with token
+  ansible.builtin.set_fact:
+    node_token: "{{ node_token.content | b64decode }}"
+
+- name: debug
+  debug: 
+    msg: "{{ node_token }}"
+
+- name: Prepare RKE2 config for agent node
+  ansible.builtin.include_tasks: 
+    file: put_config.yaml
+
+- name: Start RKE agent service
+  ansible.builtin.systemd:
+    name: rke2-agent.service
+    state: started
+    enabled: true

@@ -1,0 +1,36 @@
+{{- range $reg := .Values.regcreds }}
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: {{ $reg.name }}
+spec:
+  refreshInterval: 20s
+  secretStoreRef:
+    name: {{ $reg.name }}
+    kind: SecretStore
+  target:
+    name: {{ $reg.name }}
+    creationPolicy: Owner
+    template:
+      type: kubernetes.io/dockerconfigjson
+      engineVersion: v2
+  data:
+  - secretKey: .dockerconfigjson
+    remoteRef:
+      key: {{ $reg.key }}
+      property: dockerconfigjson
+---
+apiVersion: external-secrets.io/v1beta1
+kind: SecretStore
+metadata:
+  name: {{ $reg.name }}
+spec:
+  provider:
+    vault:
+      auth:
+        kubernetes:
+          mountPath: kubernetes
+          role: {{ $reg.role }}
+      server: http://vault.galaxy.dev
+{{ end -}}

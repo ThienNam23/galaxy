@@ -1,0 +1,8 @@
+- name: Add user, group and ssh key for all node
+  hosts: all
+  become: true
+  vars:
+    ansible_user: "vagrant"
+    ansible_ssh_private_key_file: "~/.vagrant.d/insecure_private_key"
+  roles:
+    - add-ssh-user

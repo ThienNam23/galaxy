@@ -1,0 +1,86 @@
+variables:
+  REGISTRY_IMAGE: "registry.gitlab.com/cyanwind23/galaxy-landing"
+
+stages:
+  - code-analysis
+  - test
+  - security-test
+  - benchmark
+  - build
+  - image-scan
+
+.select_branch_and_runner: &run_on
+  tags:
+    - build
+  only:
+    - dev
+    - develop
+    - main
+    - master
+
+code-analysis:
+  stage: code-analysis
+  script:
+    - echo "Running code-analysis"
+  <<: *run_on
+
+test:
+  stage: test
+  before_script:
+    - echo "Preparing test environment"
+  script:
+    - echo "Running Unit tests"
+    # - exit 1
+    - echo "Running Integration tests"
+  <<: *run_on
+
+security-test:
+  stage: security-test
+  script:
+    - echo "Running Security tests"
+  <<: *run_on
+
+benchmark:
+  stage: benchmark
+  script:
+    - echo "Running Performance tests"
+  <<: *run_on
+
+.build_template: &build
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.14.0-debug
+    entrypoint: [""]
+  before_script:
+    - echo "{\"auths\":{\"${REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${REGISTRY_USER}" "${REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+  script:
+    - export APP_VERSION=$ENV_NAME-$(date +'%Y%m%d%H%M%S')-`[ -n "$CI_COMMIT_TAG" ] && echo $CI_COMMIT_TAG || echo $CI_COMMIT_SHORT_SHA`
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --destination "${REGISTRY_IMAGE}:${APP_VERSION}"
+  allow_failure: false
+  tags:
+    - build
+
+build-dev:
+  variables:
+    ENV_NAME: dev
+  only:
+    - dev
+    - develop
+  <<: *build
+
+build-prod:
+  variables:
+    ENV_NAME: prod
+  only:
+    - main
+    - master
+  <<: *build
+
+image-scan:
+  stage: image-scan
+  script:
+    - echo "Running image scan"
+  <<: *run_on

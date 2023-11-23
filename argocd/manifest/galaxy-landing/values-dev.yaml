@@ -1,0 +1,16 @@
+
+polylite:
+  enabled: true
+  quickConfigs:
+    registry: registry.gitlab.com/cyanwind23/galaxy-landing
+    domain: galaxy-landing-dev.galaxy.dev
+    port: 80
+  fullnameOverride: galaxy-landing-dev
+  serviceAccount:
+    create: true
+    name: galaxy-landing-dev
+
+regcreds:
+  - name: regcreds-galaxy-landing
+    key: secrets/data/projects/galaxy-landing/regcred
+    role: galaxy-landing-regcred-ro

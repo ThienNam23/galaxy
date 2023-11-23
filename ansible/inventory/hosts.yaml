@@ -1,0 +1,18 @@
+all:
+  hosts:
+    host_master:
+      ansible_host: 192.168.57.100
+    host_worker:
+      ansible_host: 192.168.57.101
+    host_gitlab:
+      ansible_host: 192.168.57.102
+  children:
+    masters:
+      hosts:
+        host_master:
+    workers:
+      hosts:
+        host_worker:
+    gitlab: # only one host
+      hosts:
+        host_gitlab:

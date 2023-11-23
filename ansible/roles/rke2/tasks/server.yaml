@@ -1,0 +1,23 @@
+---
+- name: Prepare RKE2 config for server node
+  ansible.builtin.include_tasks: 
+    file: put_config.yaml
+
+- name: Start RKE server service
+  ansible.builtin.systemd:
+    name: rke2-server.service
+    state: started
+    enabled: true
+
+- name: Replace IP in kubeconfig file
+  ansible.builtin.replace:
+    path: /etc/rancher/rke2/rke2.yaml
+    regexp: '127\.0\.0\.1'
+    replace: "{{ ansible_host }}"
+
+- name: Fetch kubeconfig file
+  run_once: true
+  ansible.builtin.fetch:
+    src: /etc/rancher/rke2/rke2.yaml
+    dest: "{{ playbook_dir }}/authenticate/rke2_kube_config.yaml"
+    flat: true

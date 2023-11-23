@@ -1,0 +1,18 @@
+---
+- name: Search entry
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "{{ item }}"
+    state: present
+  check_mode: yes
+  register: presence
+
+- name: Add entry if not present
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "{{ item }}"
+  when: presence is changed
+
+# - name: Test
+#   debug:
+#     msg: "{{ item }}"
